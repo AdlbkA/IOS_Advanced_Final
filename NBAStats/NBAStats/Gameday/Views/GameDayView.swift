@@ -12,11 +12,6 @@ struct GameDayView: View {
     @State       private var selectedDate = Date()
     
     var body: some View {
-        HStack{
-            
-        }
-        
-        
         VStack(spacing: 0) {
             
             Text("NBA Scores")
@@ -47,35 +42,46 @@ struct GameDayView: View {
             
             Spacer()
             
-            HStack{
-                Button("Home") {}
+            
+            
+            HStack(spacing: 0) {
                 
-                    .padding(.leading, 35.0)
-                
-                
-                Spacer()
-                
-                Button("Standings") {
-                    viewModel.showStandings()
+                VStack {
+                    Image(systemName: "house.fill")
+                    Text("Home")
                 }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                //                .onTapGesture { /* viewModel.showHome() */ }
                 
+                // MARK: – Standings
+                VStack {
+                    Image(systemName: "trophy")
+                    Text("Standings")
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture { viewModel.showStandings() }
                 
-                Spacer()
-                
-                Button ("Sign out") {
+                VStack {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                    Text("Sign out")
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
                     viewModel.signOut()
                     viewModel.showSignIn()
                 }
-                .padding(.trailing, 35.0)
-               
             }
-            
+            .foregroundColor(.black)
+            .padding(.vertical, 6)
+            .background(Color.gray.opacity(0.15))      
             
         }
         
         .task(id: selectedDate) {
             await viewModel.getGameDay(for: selectedDate)}
-        
     }
 }
 

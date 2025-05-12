@@ -9,9 +9,9 @@ import SwiftUI
 
 struct StandingsView: View {
     @StateObject var viewModel: StandingsViewModel
-
+    
     @State private var selectedIndex: Int = 0
-
+    
     private var conferences: [Conference] {
         viewModel.standings?.conferences ?? []
     }
@@ -22,10 +22,10 @@ struct StandingsView: View {
             .flatMap(\.teams)
             .sorted { $0.win_pct > $1.win_pct }
     }
-
+    
     var body: some View {
         VStack(spacing: 0) {
-
+            
             if !conferences.isEmpty {
                 Picker("Conference", selection: $selectedIndex) {
                     ForEach(conferences.indices, id: \.self) { idx in
@@ -36,21 +36,21 @@ struct StandingsView: View {
                 .pickerStyle(.segmented)
                 .padding()
             }
-
+            
             if !currentTeams.isEmpty {
                 header
                     .padding(.horizontal)
             }
-
+            
             List(Array(currentTeams.enumerated()), id: \.1.name) { index, team in
                 HStack {
                     Text("\(index + 1)")
                         .frame(width: 24, alignment: .trailing)
                         .foregroundStyle(.secondary)
-
+                    
                     Text(team.name)
                         .frame(maxWidth: .infinity, alignment: .leading)
-
+                    
                     Text("\(team.wins)")
                         .frame(width: 32, alignment: .trailing)
                     Text("\(team.losses)")
@@ -67,38 +67,54 @@ struct StandingsView: View {
             await viewModel.getStandings()
         }
         
-        HStack{
-            Button("Home") {
-                viewModel.showHome()
+        HStack(spacing: 0) {
+            
+            VStack {
+                Image(systemName: "house")
+                Text("Home")
             }
-                .padding(.leading, 35.0)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture { viewModel.showHome() }
             
             
-            Spacer()
+            VStack {
+                Image(systemName: "trophy.fill")
+                Text("Standings")
+            }
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
             
-            Button("Standings") {}
             
-            Spacer()
             
-            Button ("Sign out") {
+            VStack {
+                Image(systemName: "rectangle.portrait.and.arrow.right")
+                Text("Sign out")
+            }
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
                 viewModel.signOut()
                 viewModel.showSignIn()
             }
-            .padding(.trailing, 35.0)
         }
+        .foregroundColor(.black)
+        .padding(.vertical, 6)
+        .background(Color.gray.opacity(0.15))
+        
     }
-
+    
     private var header: some View {
         HStack {
             Text("Team")
                 .frame(maxWidth: .infinity, alignment: .leading)
-
+            
             Text("W")
                 .frame(width: 32, alignment: .trailing)
-
+            
             Text("L")
                 .frame(width: 32, alignment: .trailing)
-
+            
             Text("PCT")
                 .frame(width: 48, alignment: .trailing)
         }
@@ -106,7 +122,7 @@ struct StandingsView: View {
         .foregroundStyle(.secondary)
     }
     
-   
+    
 }
 
 #Preview {
